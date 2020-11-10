@@ -5,10 +5,10 @@
 # lien 25 rng,
 
 
-
 import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
+from math import ceil
 
 print(tf.version)
 
@@ -35,8 +35,7 @@ class reservoir:
             'pres']  # 0.5; %? some sort of thershold on revervoir weights- why? - perhaps to make them 0and 1 like gin?(-1,1)
         self.pinh = res_para['pinh']  # 0.2;    %?  decides what fraction of res neurons are inhibitory
         self.fout = res_para['fout']  # 4;      %? no of res neurons each input neuron is connected to
-        self.pinhi = res_para[
-            'pinhi']  # 0.25;  %? perhaps each ip neuron has this much inhibitory connection and 1-this exhibitory
+        self.pinhi = res_para['pinhi']  # 0.25;  %? perhaps each ip neuron has this much inhibitory connection and 1-this exhibitory
 
         # synapse para
         self.Iwave = synapse_model['Iwave']  # rest dont seem imp
@@ -48,6 +47,11 @@ class reservoir:
         self.Vth = neuron_model['Vth']
         self.Vrst = neuron_model['Vrst']
         self.RPS = neuron_model['RPS']
+
+        # future parameters
+        self.memV = 'memv'
+        self.Iin_all = 'Iinall'
+        self.res_spike_all = 'resspikeall'
 
     def run_input(self, input_spike):  # num_channels x num_timesteps matrix
 
@@ -88,28 +92,40 @@ class reservoir:
             V[res_spikes] = self.Vrst
             RP[res_spikes] = self.RPS
 
-        plt.plot(self.t, memV[1, :])
+        self.Iin_all = Iin_all
+        self.memV = memV
+        self.res_spike_all = res_spikes_all
+
+        return res_spikes_all  # reservoir_spike_pattern
+
+    def plot_reservoir_char(self):
+        if self.memV.isalpha() : return " reservoir not generated"
+
+        plt.plot(self.t, self.memV[1, :])
         plt.xlabel("time")
         plt.ylabel(" memV for a neuron")
         plt.title("MemV vs time", loc='right')
         plt.show()
 
-        plt.plot(self.t, Iin_all[1, :])
+        plt.plot(self.t, self.Iin_all[1, :])
         plt.xlabel("time")
         plt.ylabel(" input currnet for a neuron")
         plt.title("Iin vs time", loc='right')
         plt.show()
 
-        x,y = np.nonzero(res_spikes_all)
-        plt.plot(y*self.dt , x, 'ro')
-        plt.ylim(1-0.1, self.Nres +0.1)
+        x, y = np.nonzero(self.res_spike_all)
+        plt.plot(y * self.dt, x, 'ro')
+        plt.ylim(1 - 0.1, self.Nres + 0.1)
         plt.xlabel("time")
         plt.ylabel(" bool(res neuron spiked) for each neuron")
         plt.title("times when each res neuron spiked", loc='right')
         plt.show()
-
-        return res_spikes_all                          #reservoir_spike_pattern
+        return
 
 
 if __name__ == '__main__':
-    0
+    from parameters import neuron, synapse, runtime, reservoir, gin, gres
+
+    res_trail = reservoir(runtime(), reservoir(), gin(), gres(), neuron(), synapse())   #each of these return a dictionary/excpt gin gres
+    res_trail.run_input(spikes)
+    res_trail.plot_reservoir_char()
