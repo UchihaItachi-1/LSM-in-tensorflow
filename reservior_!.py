@@ -1,3 +1,6 @@
+#11.11.20
+#
+
 # 5.11.20
 # using speech_lsm
 # Iin in line 69 will work as long as dealing with 2d matrices and not high d tensors
@@ -6,11 +9,11 @@
 
 
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
 from matplotlib import pyplot as plt
 from math import ceil
 
-print(tf.version)
+#print(tf.version)
 
 
 class reservoir:
@@ -125,7 +128,7 @@ class reservoir:
 
 if __name__ == '__main__':
     from parameters import neuron, synapse, runtime, reservoir, gin, gres
-
+    from input_spikes import spikes
     res_trail = reservoir(runtime(), reservoir(), gin(), gres(), neuron(), synapse())   #each of these return a dictionary/excpt gin gres
-    res_trail.run_input(spikes)
+    res_trail.run_input(spikes())
     res_trail.plot_reservoir_char()
