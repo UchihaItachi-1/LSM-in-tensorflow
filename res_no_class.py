@@ -8,7 +8,7 @@ def init_reservoir():
 def run_input(input_spike):
     reservoir_spike_pattern = 0
     return reservoir_spike_pattern
-
+#lol
 #added comment
 
 if __name__ == '__main__':
