@@ -7,9 +7,9 @@ def init_reservoir():
 
 def run_input(input_spike):
     reservoir_spike_pattern = 0
-
-
     return reservoir_spike_pattern
+
+#added comment
 
 if __name__ == '__main__':
     # runtime_para, res_para, Gin, Gres, neuron_model, synapse_model
